@@ -1,0 +1,20 @@
+{
+    "wpwp": {
+        "mg5_syntax": "generate w+ w+ > w+ w+ NP=X"
+    },
+    "wmzh": {
+        "mg5_syntax": "generate p p > w- z h QED=3"
+    },
+    "zhjj": {
+        "mg5_syntax": "generate p p > z h j j QCD=0"
+    },
+    "wphjj": {
+        "mg5_syntax": "generate p p > w+ h j j QCD=0"
+    },
+    "wmhjj": {
+        "mg5_syntax": "generate p p > w- h j j QCD=0"
+    },
+    "zhh": {
+        "mg5_syntax": "generate p p > z h h QED=3"
+    }
+}
