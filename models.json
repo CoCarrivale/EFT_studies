@@ -1,23 +1,23 @@
 {
     "aqgc": {
       "ufo":"aqgc_UFO",
-      "block": "aqgc",
-      "operators": ["FS0", "FS1", "FS2", "FM1", "FM2", "FM3", "FM4", "FM5", "FM7", "FM8", "FM9", "FT0", "FT1", "FT2", "FT3", "FT4", "FT5", "FT6", "FT7", "FT8", "FT9", "FM1odd", "FM2odd", "FM3odd", "FM4odd", "FM5odd", "FM6odd", "FT1odd", "FT2odd", "FT3odd", "FT4odd", "FT5odd", "FT6odd"],
-      "range": [1,34]   
+      "block": ["aqgc"],
+      "operators": [["FS0", "FS1", "FS2", "FM1", "FM2", "FM3", "FM4", "FM5", "FM7", "FM8", "FM9", "FT0", "FT1", "FT2", "FT3", "FT4", "FT5", "FT6", "FT7", "FT8", "FT9", "FM1odd", "FM2odd", "FM3odd", "FM4odd", "FM5odd", "FM6odd", "FT1odd", "FT2odd", "FT3odd", "FT4odd", "FT5odd", "FT6odd"]],
+      "range": [[1,34]]   
     },
     "smeftfr": {
       "ufo":"SmeftFR_dim6_dim8_UFO",
-      "block": "frblock",
-      "operators": ["CB2phi2D2n1", "CB2phi2D2n2", "CB2phi2D2n3", "CB2phi4n1", "CB2phi4n2", "CB4n1", "CB4n2", "CB4n3", "CBphi4D2n1", "CBphi4D2n2", "Cphi", "Cphi4D4n1", "Cphi4D4n2", "Cphi4D4n3", "Cphi6Box", "Cphi6D2", "Cphi8", "CphiBox", "CphiBtilde", "CphiD", "CphiW", "CphiWB", "CphiWtilde", "CphiWtildeB", "CW", "CW2B2n1", "CW2B2n2", "CW2B2n3", "CW2B2n4", "CW2B2n5", "CW2B2n6", "CW2B2n7", "CW2Bphi2n1", "CW2Bphi2n2", "CW2phi2D2n1", "CW2phi2D2n2", "CW2phi2D2n3", "CW2phi2D2n4", "CW2phi2D2n5", "CW2phi2D2n6", "CW2phi4n1", "CW2phi4n2", "CW2phi4n3", "CW2phi4n4", "CW3phi2n1", "CW3phi2n2", "CW4n1", "CW4n2", "CW4n3", "CW4n4", "CW4n5", "CW4n6", "CWBphi2D2n1", "CWBphi2D2n2", "CWBphi2D2n3", "CWBphi2D2n4", "CWBphi2D2n5", "CWBphi2D2n6", "CWBphi4n1", "CWBphi4n2", "CWphi4D2n1", "CWphi4D2n2", "CWphi4D2n3", "CWphi4D2n4", "CWtilde"],
-      "range": [72,136]  
+      "block": ["frblock"],
+      "operators": [["CB2phi2D2n1", "CB2phi2D2n2", "CB2phi2D2n3", "CB2phi4n1", "CB2phi4n2", "CB4n1", "CB4n2", "CB4n3", "CBphi4D2n1", "CBphi4D2n2", "Cphi", "Cphi4D4n1", "Cphi4D4n2", "Cphi4D4n3", "Cphi6Box", "Cphi6D2", "Cphi8", "CphiBox", "CphiBtilde", "CphiD", "CphiW", "CphiWB", "CphiWtilde", "CphiWtildeB", "CW", "CW2B2n1", "CW2B2n2", "CW2B2n3", "CW2B2n4", "CW2B2n5", "CW2B2n6", "CW2B2n7", "CW2Bphi2n1", "CW2Bphi2n2", "CW2phi2D2n1", "CW2phi2D2n2", "CW2phi2D2n3", "CW2phi2D2n4", "CW2phi2D2n5", "CW2phi2D2n6", "CW2phi4n1", "CW2phi4n2", "CW2phi4n3", "CW2phi4n4", "CW3phi2n1", "CW3phi2n2", "CW4n1", "CW4n2", "CW4n3", "CW4n4", "CW4n5", "CW4n6", "CWBphi2D2n1", "CWBphi2D2n2", "CWBphi2D2n3", "CWBphi2D2n4", "CWBphi2D2n5", "CWBphi2D2n6", "CWBphi4n1", "CWBphi4n2", "CWphi4D2n1", "CWphi4D2n2", "CWphi4D2n3", "CWphi4D2n4", "CWtilde"]],
+      "range": [[72,136]]  
     },
     "smeftsimu35": {
       "ufo":"SMEFTsim_U35_MwScheme_UFO",
-      "block": "SMEFT",
-      "operators_full": ["cG", "cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB", "ceHRe", "cuHRe", "cdHRe", "ceWRe", "ceBRe", "cuGRe", "cuWRe", "cuBRe", "cdGRe", "cdWRe", "cdBRe", "cHl1", "cHl3", "cHe", "cHq1", "cHq3", "cHu", "cHd", "cHudRe", "cll", "cll1", "cqq1", "cqq11", "cqq3", "cqq31", "clq1", "clq3", "cee", "cuu", "cuu1", "cdd", "cdd1", "ceu", "ced", "cud1", "cud8", "cle", "clu", "cld", "cqe", "cqu1", "cqu8", "cqd1", "cqd8", "cledqRe", "cquqd1Re", "cquqd11Re", "cquqd8Re", "cquqd81Re", "clequ1Re", "clequ3Re"],
-      "operators": ["cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB"],     
-      "range_full": [1,60],
-      "range": [2,9]   
+      "block": ["SMEFT","SMEFTcpv"],
+      "operators_full": [["cG", "cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB", "ceHRe", "cuHRe", "cdHRe", "ceWRe", "ceBRe", "cuGRe", "cuWRe", "cuBRe", "cdGRe", "cdWRe", "cdBRe", "cHl1", "cHl3", "cHe", "cHq1", "cHq3", "cHu", "cHd", "cHudRe", "cll", "cll1", "cqq1", "cqq11", "cqq3", "cqq31", "clq1", "clq3", "cee", "cuu", "cuu1", "cdd", "cdd1", "ceu", "ced", "cud1", "cud8", "cle", "clu", "cld", "cqe", "cqu1", "cqu8", "cqd1", "cqd8", "cledqRe", "cquqd1Re", "cquqd11Re", "cquqd8Re", "cquqd81Re", "clequ1Re", "clequ3Re"],["cGtil", "cWtil", "cHGtil", "cHWtil", "cHBtil", "cHWBtil", "ceWIm", "ceBIm", "cuGIm", "cuWIm", "cuBIm", "cdGIm", "cdWIm", "cdBIm", "cHudIm", "ceHIm", "cuHIm", "cdHIm", "cledqIm", "cquqd1Im", "cquqd8Im", "cquqd11Im", "cquqd81Im", "clequ1Im", "clequ3Im"]],
+      "operators": [["cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB"],["cWtil", "cHGtil", "cHWtil", "cHBtil", "cHWBtil"]],     
+      "range_full": [[1,60],[1,25]],
+      "range": [[2,9],[2,6]]   
     }
   }
   

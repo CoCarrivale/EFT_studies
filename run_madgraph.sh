@@ -12,9 +12,10 @@ models_json="$baseDir/models.json"
 
 proc=$1
 model=$2
+N=${3:-0}
 
 mg5_string=$(jq -r ".${proc}.mg5_syntax" $file)
-block=$(jq -r ".[\"$model\"].block" "$models_json")
+block=$(jq -r --arg model "$model" --argjson N "$N" '.[$model].block[$N]' "$models_json")
 ufo=$(jq -r ".[\"$model\"].ufo" "$models_json")
 
 restrict_card="$baseDir/MG5_aMC_v2_9_18/models/$ufo/restrict_base.dat"
@@ -24,14 +25,34 @@ if [ "$mg5_syntax" == "null" ]; then
     exit 1
 fi
 
-mapfile -t operators < <(jq -r ".[\"$model\"].operators[]" "$models_json")
+#mapfile -t operators < <(jq -r ".[\"$model\"].operators[]" "$models_json")
 
-start=$(jq ".[\"$model\"].range[0]" "$models_json")
-end=$(jq ".[\"$model\"].range[1]" "$models_json")
+#start=$(jq ".[\"$model\"].range[0]" "$models_json")
+#end=$(jq ".[\"$model\"].range[1]" "$models_json")
+#range=()
+#for ((i=start; i<=end; i++)); do
+#  range+=($i)
+#done
+
+mapfile -t operators < <(jq -r ".\"$model\".operators[$N][]" "$models_json")
+start=$(jq -r ".\"$model\".range[$N][0]" "$models_json")
+end=$(jq -r ".\"$model\".range[$N][1]" "$models_json")
 range=()
 for ((i=start; i<=end; i++)); do
-  range+=($i)
+  range+=("$i")
 done
+
+echo "Block: $block"
+echo ""
+
+echo "Operators:"
+for op in "${operators[@]}"; do
+  echo " - $op"
+done
+echo ""
+
+echo "Range: [$start ; $end]"
+
 
 echo "Working on process $proc with model $model"
 echo "mg5_syntax: $mg5_string"
@@ -101,8 +122,17 @@ echo "change helicity False" > "$rwgt_card"
 echo "change rwgt_dir rwgt" >> "$rwgt_card"
 echo "" >> "$rwgt_card"
 
-OPERATORS=($(jq -r --arg model "$model" '.[$model].operators[]' "$models_json"))
-START_INDEX=$(jq -r --arg model "$model" '.[$model].range[0]' "$models_json")
+#OPERATORS=($(jq -r --arg model "$model" '.[$model].operators[]' "$models_json"))
+#START_INDEX=$(jq -r --arg model "$model" '.[$model].range[0]' "$models_json")
+
+#declare -A OP_INDEX
+#for i in "${!OPERATORS[@]}"; do
+#    idx=$((START_INDEX + i))
+#    OP_INDEX["${OPERATORS[$i]}"]=$idx
+#done
+
+OPERATORS=($(jq -r --arg model "$model" --argjson n "$N" '.[$model].operators[$n][]' "$models_json"))
+START_INDEX=$(jq -r --arg model "$model" --argjson n "$N" '.[$model].range[$n][0]' "$models_json")
 
 declare -A OP_INDEX
 for i in "${!OPERATORS[@]}"; do

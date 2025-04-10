@@ -1,5 +1,6 @@
 diagrams.txt
-MG5_aMC_v2_9_23/
+MG5_aMC_*
 mg5_*
 reweight_card.dat
 restrict_*
+py.py
