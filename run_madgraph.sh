@@ -203,7 +203,7 @@ echo "Reweight card ready!"
 
 # Restriction card
 
-restrict_target="$baseDir/MG5_aMC_v2_9_18  /models/$ufo/restrict_${proc}.dat"
+restrict_target="$baseDir/MG5_aMC_v2_9_18/models/$ufo/restrict_${proc}.dat"
 cp "$restrict_card" "$restrict_target"
 used_indices=$(grep "^ *set $block" "$rwgt_card" | awk '{print $3}' | sort -n | uniq)
 
