@@ -6,7 +6,7 @@
 ##############
 
 echo "Downloading MG5_aMC_v2_9_18_patched  ..."
-wget http://cms-project-generators.web.cern.ch/cms-project-generators/MG5_aMC_v2.9.18_patched.tar.gz
+wget http://cms-project-generators.web.cern.ch/cms-project-generators/MG5_aMC_v2_9_18_patched.tar.gz
 tar xvf MG5_aMC_v2_9_18_patched  .tar.gz
 rm MG5_aMC_v2_9_18_patched  .tar.gz
 
