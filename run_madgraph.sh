@@ -5,7 +5,7 @@
 baseDir=$(pwd)
 echo $baseDir
 
-rm "$baseDir"/MG5_aMC_v2_9_18_patched  /mg5_cmd.txt "$baseDir"/py.py "$baseDir"/mg5_* "$baseDir"/MG5_debug "$baseDir"/diagrams.txt "$baseDir"/mg5_*
+rm "$baseDir"/MG5_aMC_v2_9_18 /mg5_cmd.txt "$baseDir"/py.py "$baseDir"/mg5_* "$baseDir"/MG5_debug "$baseDir"/diagrams.txt "$baseDir"/mg5_*
 
 file="$baseDir/processes.json"
 models_json="$baseDir/models.json"
@@ -17,7 +17,7 @@ mg5_string=$(jq -r ".${proc}.mg5_syntax" $file)
 block=$(jq -r ".[\"$model\"].block" "$models_json")
 ufo=$(jq -r ".[\"$model\"].ufo" "$models_json")
 
-restrict_card="$baseDir/MG5_aMC_v2_9_18_patched  /models/$ufo/restrict_base.dat"
+restrict_card="$baseDir/MG5_aMC_v2_9_18 /models/$ufo/restrict_base.dat"
 
 if [ "$mg5_syntax" == "null" ]; then
     echo "No matching process found for $1"
@@ -40,13 +40,13 @@ echo "mg5_syntax: $mg5_string"
 
 echo "Counting diagrams for SM"
 
-cmd_file="$baseDir/MG5_aMC_v2_9_18_patched  /mg5_cmd.txt"
+cmd_file="$baseDir/MG5_aMC_v2_9_18 /mg5_cmd.txt"
 echo "import model $ufo-base" >> $cmd_file
 echo ${mg5_string//X/0} >> $cmd_file
 echo "quit" >> $cmd_file
 
 cat $cmd_file
-python3 $baseDir/MG5_aMC_v2_9_18_patched  /bin/mg5_aMC $cmd_file > $baseDir/mg5_${proc}.log
+python3 $baseDir/MG5_aMC_v2_9_18 /bin/mg5_aMC $cmd_file > $baseDir/mg5_${proc}.log
   
 if grep -q "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/mg5_${proc}.log; then
   diagrams_line=$(grep "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/mg5_${proc}.log)
@@ -65,13 +65,13 @@ for ((i=0; i<${#operators[@]}; i++)); do
   oppe=${operators[$i]}
   sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $oppe\>/\\1  1.00000e+00 # $oppe/" "$restrict_card"
   echo "Counting diagrams for $oppe"
-  cmd_file="$baseDir/MG5_aMC_v2_9_18_patched  /mg5_cmd.txt"
+  cmd_file="$baseDir/MG5_aMC_v2_9_18 /mg5_cmd.txt"
   echo "import model $ufo-base" >> $cmd_file
   echo ${mg5_string//X/1} >> $cmd_file
   echo "quit" >> $cmd_file
 
   cat $cmd_file
-  python3 "$baseDir"/MG5_aMC_v2_9_18_patched  /bin/mg5_aMC $cmd_file > "$baseDir"/mg5_${proc}_${oppe}.log
+  python3 "$baseDir"/MG5_aMC_v2_9_18 /bin/mg5_aMC $cmd_file > "$baseDir"/mg5_${proc}_${oppe}.log
   
   if grep -q "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/mg5_${proc}_${oppe}.log; then
     diagrams_line=$(grep "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/mg5_${proc}_${oppe}.log)
@@ -203,7 +203,7 @@ echo "Reweight card ready!"
 
 # Restriction card
 
-restrict_target="$baseDir/MG5_aMC_v2_9_18_patched  /models/$ufo/restrict_${proc}.dat"
+restrict_target="$baseDir/MG5_aMC_v2_9_18  /models/$ufo/restrict_${proc}.dat"
 cp "$restrict_card" "$restrict_target"
 used_indices=$(grep "^ *set $block" "$rwgt_card" | awk '{print $3}' | sort -n | uniq)
 
