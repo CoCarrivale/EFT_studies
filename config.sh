@@ -7,8 +7,8 @@
 
 echo "Downloading MG5_aMC_v2_9_18  ..."
 wget http://cms-project-generators.web.cern.ch/cms-project-generators/MG5_aMC_v2.9.18.tar.gz
-tar xvf MG5_aMC_v2_9_18.tar.gz
-rm MG5_aMC_v2_9_18.tar.gz
+tar xvf MG5_aMC_v2.9.18.tar.gz
+rm MG5_aMC_v2.9.18.tar.gz
 
 #####################
 ## Main EFT models ##
