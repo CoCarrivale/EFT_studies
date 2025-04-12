@@ -9,7 +9,8 @@ After cloning the repository, run the configuration file:
 After that, you will have MG5_aMC_v2_9_18 with all relevant models for EFT @dim6 and @dim8. Most of the models are already implemented in models.json.
 
 <details>
-    <summary> What if I want to upload a new model?
+    <summary> What if I want to upload a new model?</summary>
+
     - Make sure to generate inside the model a restrict_card called ```restrict_base.dat``` with all WCs set to 0.
     - For each EFT block, define a list of operators with corresponding indices range inside the block.
     - You can also upload the tar.gz file in models/. 
