@@ -25,3 +25,5 @@ for file in models/*_UFO.tar.gz; do
     rm "${model}_UFO.tar.gz"
     cd ../..
 done
+
+mkdir Output

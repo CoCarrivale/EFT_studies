@@ -4,3 +4,5 @@ mg5_*
 reweight_card.dat
 restrict_*
 py.py
+Output/
+logs/

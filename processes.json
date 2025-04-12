@@ -1,20 +1,9 @@
 {
     "wpwp": {
-        "mg5_syntax": "generate w+ w+ > w+ w+ NP=X"
+        "mg5_syntax": "define p = g u u~ d d~ s s~ c c~ b b~ ## define j = p ## generate w+ w+ > w+ w+ NP=X"
     },
-    "wmzh": {
-        "mg5_syntax": "generate p p > w- z h QED=3"
-    },
-    "zhjj": {
-        "mg5_syntax": "generate p p > z h j j QCD=0"
-    },
-    "wphjj": {
-        "mg5_syntax": "generate p p > w+ h j j QCD=0"
-    },
-    "wmhjj": {
-        "mg5_syntax": "generate p p > w- h j j QCD=0"
-    },
-    "zhh": {
-        "mg5_syntax": "generate p p > z h h QED=3"
+    "wz": {
+        "mg5_syntax": [["define p = g u u~ d d~ s s~ c c~ b b~ ## define j = p ## generate w+ w+ > w+ w+ NP=X"],["define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm vt ## define vl~ = ve~ vm~ vt~ ## generate z > l+ l- NP=X ## add process w+ > l+ vl NP=X ## add process w- > l- vl~ NP=X"]]
     }
 }
+
