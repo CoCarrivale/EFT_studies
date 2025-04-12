@@ -7,7 +7,7 @@ N=${3:-0}
 
 if [[ -n "$_CONDOR_SCRATCH_DIR" ]]; then
   echo "Running under Condor — Copying files"
-  LOCAL_PATH="CURRENT_DIRECTORY"
+  LOCAL_PATH="/afs/cern.ch/user/c/ccarriva/dim6dim8/EFT_studies"
   cp -r $LOCAL_PATH/MG5_aMC_v2_9_18 $LOCAL_PATH/models.json $LOCAL_PATH/processes.json .
 else
   echo "Running locally — using existing MG5_aMC_v2_9_18 directory"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Searching for process definition
+
 baseDir=$(pwd)
 proc=$1
 model=$2
@@ -14,94 +16,116 @@ else
   LOCAL_PATH=$baseDir
 fi
 
-rm -rf $baseDir/MG5_aMC_v2_9_18/mg5_cmd.txt $baseDir/py.py $baseDir/MG5_debug $baseDir/Output/$proc/
+rm -r $baseDir/MG5_aMC_v2_9_18/mg5_cmd.txt $baseDir/py.py $baseDir/MG5_debug $baseDir/Output/$proc/
 
 file="$baseDir/processes.json"
 models_json="$baseDir/models.json"
 mkdir -p $baseDir/logs
 mkdir -p $baseDir/Output/$proc
 
-echo "Parsing model info..."
+mg5_string=$(jq -r ".${proc}.mg5_syntax" $file)
 block=$(jq -r --arg model "$model" --argjson N "$N" '.[$model].block[$N]' "$models_json")
 ufo=$(jq -r ".[\"$model\"].ufo" "$models_json")
+
 restrict_card="$baseDir/MG5_aMC_v2_9_18/models/$ufo/restrict_base.dat"
+
+if [ "$mg5_syntax" == "null" ]; then
+    echo "No matching process found for $1"
+    exit 1
+fi
+
+#mapfile -t operators < <(jq -r ".[\"$model\"].operators[]" "$models_json")
+
+#start=$(jq ".[\"$model\"].range[0]" "$models_json")
+#end=$(jq ".[\"$model\"].range[1]" "$models_json")
+#range=()
+#for ((i=start; i<=end; i++)); do
+#  range+=($i)
+#done
 
 mapfile -t operators < <(jq -r ".\"$model\".operators[$N][]" "$models_json")
 start=$(jq -r ".\"$model\".range[$N][0]" "$models_json")
 end=$(jq -r ".\"$model\".range[$N][1]" "$models_json")
+range=()
+for ((i=start; i<=end; i++)); do
+  range+=("$i")
+done
 
-# Parse mg5_syntax (single or multiple)
-mg5_entry=$(jq -c ".${proc}.mg5_syntax" "$file")
-declare -a mg5_syntax_list
-if [[ "$mg5_entry" =~ ^\[ ]]; then
-  mapfile -t mg5_syntax_list < <(jq -r ".${proc}.mg5_syntax[][]" "$file")
+echo "Block: $block"
+echo ""
+
+echo "Operators:"
+for op in "${operators[@]}"; do
+  echo " - $op"
+done
+echo ""
+
+echo "Range: [$start ; $end]"
+
+
+echo "Working on process $proc with model $model"
+echo "mg5_syntax: $mg5_string"
+
+# Running Standard Model
+
+echo "Counting diagrams for SM"
+
+cmd_file="$baseDir/MG5_aMC_v2_9_18/mg5_cmd.txt"
+echo "import model $ufo-base" >> $cmd_file
+IFS='##' read -ra parts <<< "${mg5_string//X/0}"
+for part in "${parts[@]}"; do
+  trimmed=$(echo "$part" | xargs)  # rimuove spazi iniziali/finali
+  [[ -n "$trimmed" ]] && echo "$trimmed" >> "$cmd_file"
+done
+echo "quit" >> $cmd_file
+
+cat $cmd_file
+python3 $baseDir/MG5_aMC_v2_9_18/bin/mg5_aMC $cmd_file > $baseDir/Output/$proc/mg5_${proc}.log
+
+if grep -q "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/Output/$proc/mg5_${proc}.log; then
+  diagrams_line=$(grep "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/Output/$proc/mg5_${proc}.log)
+  m_diagrams=$(echo "$diagrams_line" | sed -n 's/.*with \([0-9]\+\) diagrams/\1/p')
+  echo "SM: ${m_diagrams} diagrams" >> $LOCAL_PATH/Output/$proc/diagrams.txt
 else
-  mg5_syntax_list=("$mg5_entry")
+  echo "SM: no diagrams found" >> $LOCAL_PATH/Output/$proc/diagrams.txt
+  exit 0
 fi
 
-declare -a sm_diagrams_per_group
-declare -A operator_diagrams_per_group
+rm $cmd_file
 
-for ((g=0; g<${#mg5_syntax_list[@]}; g++)); do
-  group="${mg5_syntax_list[$g]}"
+# Launching MadGraph
 
-  echo "Counting SM diagrams for group $g"
+for ((i=0; i<${#operators[@]}; i++)); do
+  oppe=${operators[$i]}
+  sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $oppe\>/\\1  1.00000e+00 # $oppe/" "$restrict_card"
+  echo "Counting diagrams for $oppe"
   cmd_file="$baseDir/MG5_aMC_v2_9_18/mg5_cmd.txt"
-  echo "import model $ufo-base" > "$cmd_file"
-  IFS='##' read -ra parts <<< "${group//X/0}"
+  echo "import model $ufo-base" >> $cmd_file
+  IFS='##' read -ra parts <<< "${mg5_string//X/1}"
   for part in "${parts[@]}"; do
-    trimmed=$(echo "$part" | xargs)
+    trimmed=$(echo "$part" | xargs)  # rimuove spazi iniziali/finali
     [[ -n "$trimmed" ]] && echo "$trimmed" >> "$cmd_file"
   done
-  echo "quit" >> "$cmd_file"
+  echo "quit" >> $cmd_file
 
-  sm_log="$baseDir/Output/$proc/mg5_${proc}_g${g}_SM.log"
-  python3 $baseDir/MG5_aMC_v2_9_18/bin/mg5_aMC $cmd_file > "$sm_log"
-  diagrams=$(grep -m1 "^Total: .* diagrams" "$sm_log" | sed -n 's/.*with \([0-9]\+\) diagrams/\1/p')
-  sm_diagrams_per_group+=($diagrams)
+  cat $cmd_file
+  python3 $baseDir/MG5_aMC_v2_9_18/bin/mg5_aMC $cmd_file > $baseDir/Output/$proc/mg5_${proc}_${oppe}.log
+  
+  if grep -q "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/Output/$proc/mg5_${proc}_${oppe}.log; then
+    diagrams_line=$(grep "^Total: [0-9]\+ processes with [0-9]\+ diagrams" $baseDir/Output/$proc/mg5_${proc}_${oppe}.log)
+    m_diagrams=$(echo "$diagrams_line" | sed -n 's/.*with \([0-9]\+\) diagrams/\1/p')
+    echo "${oppe}: ${m_diagrams} diagrams" >> $LOCAL_PATH/Output/$proc/diagrams.txt
+  else
+    echo "${oppe}: no diagrams found" >> $LOCAL_PATH/Output/$proc/diagrams.txt
+  fi
 
-  for op in "${operators[@]}"; do
-    sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $op\>/\\1  1.00000e+00 # $op/" "$restrict_card"
-    echo "import model $ufo-base" > "$cmd_file"
-    IFS='##' read -ra np_parts <<< "${group//X/1}"
-    for part in "${np_parts[@]}"; do
-      trimmed=$(echo "$part" | xargs)
-      [[ -n "$trimmed" ]] && echo "$trimmed" >> "$cmd_file"
-    done
-    echo "quit" >> "$cmd_file"
-
-    log_file="$baseDir/Output/$proc/mg5_${proc}_${op}_g${g}.log"
-    python3 $baseDir/MG5_aMC_v2_9_18/bin/mg5_aMC $cmd_file > "$log_file"
-    n_diags=$(grep -m1 "^Total: .* diagrams" "$log_file" | sed -n 's/.*with \([0-9]\+\) diagrams/\1/p')
-    operator_diagrams_per_group[$op]+="$n_diags "
-
-    sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $op\>/\\1  .000000e+00 # $op/" "$restrict_card"
-  done
-  rm "$cmd_file"
+  sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $oppe\>/\\1  .000000e+00 # $oppe/" "$restrict_card"
+  rm $cmd_file
 done
-
-# Write diagram summary
-out_diagrams="$LOCAL_PATH/Output/$proc/diagrams.txt"
-echo "SM: ${sm_diagrams_per_group[*]}" > "$out_diagrams"
-for op in "${operators[@]}"; do
-  echo "$op: ${operator_diagrams_per_group[$op]}" >> "$out_diagrams"
-done
-
-# Filter significant operators
-declare -a DIFF_OPS
-for op in "${operators[@]}"; do
-  op_diags=( ${operator_diagrams_per_group[$op]} )
-  diff=0
-  for i in "${!op_diags[@]}"; do
-    [[ "${op_diags[$i]}" != "${sm_diagrams_per_group[$i]}" ]] && diff=1 && break
-  done
-  [[ $diff -eq 1 ]] && DIFF_OPS+=($op)
-done
-
-echo "Significant operators: ${DIFF_OPS[*]}"
 
 ######################
 ######################
+
 
 echo "   "
 echo "STARTING"

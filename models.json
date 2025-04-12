@@ -14,10 +14,10 @@
     "smeftsimu35": {
       "ufo":"SMEFTsim_U35_MwScheme_UFO",
       "block": ["SMEFT","SMEFTcpv"],
-      "operators_full": [["cG", "cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB", "ceHRe", "cuHRe", "cdHRe", "ceWRe", "ceBRe", "cuGRe", "cuWRe", "cuBRe", "cdGRe", "cdWRe", "cdBRe", "cHl1", "cHl3", "cHe", "cHq1", "cHq3", "cHu", "cHd", "cHudRe", "cll", "cll1", "cqq1", "cqq11", "cqq3", "cqq31", "clq1", "clq3", "cee", "cuu", "cuu1", "cdd", "cdd1", "ceu", "ced", "cud1", "cud8", "cle", "clu", "cld", "cqe", "cqu1", "cqu8", "cqd1", "cqd8", "cledqRe", "cquqd1Re", "cquqd11Re", "cquqd8Re", "cquqd81Re", "clequ1Re", "clequ3Re"],["cGtil", "cWtil", "cHGtil", "cHWtil", "cHBtil", "cHWBtil", "ceWIm", "ceBIm", "cuGIm", "cuWIm", "cuBIm", "cdGIm", "cdWIm", "cdBIm", "cHudIm", "ceHIm", "cuHIm", "cdHIm", "cledqIm", "cquqd1Im", "cquqd8Im", "cquqd11Im", "cquqd81Im", "clequ1Im", "clequ3Im"]],
-      "operators": [["cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB"],["cWtil", "cHGtil", "cHWtil", "cHBtil", "cHWBtil"]],     
-      "range_full": [[1,60],[1,25]],
-      "range": [[2,9],[2,6]]   
+      "operators": [["cG", "cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB", "ceHRe", "cuHRe", "cdHRe", "ceWRe", "ceBRe", "cuGRe", "cuWRe", "cuBRe", "cdGRe", "cdWRe", "cdBRe", "cHl1", "cHl3", "cHe", "cHq1", "cHq3", "cHu", "cHd", "cHudRe", "cll", "cll1", "cqq1", "cqq11", "cqq3", "cqq31", "clq1", "clq3", "cee", "cuu", "cuu1", "cdd", "cdd1", "ceu", "ced", "cud1", "cud8", "cle", "clu", "cld", "cqe", "cqu1", "cqu8", "cqd1", "cqd8", "cledqRe", "cquqd1Re", "cquqd11Re", "cquqd8Re", "cquqd81Re", "clequ1Re", "clequ3Re"],["cGtil", "cWtil", "cHGtil", "cHWtil", "cHBtil", "cHWBtil", "ceWIm", "ceBIm", "cuGIm", "cuWIm", "cuBIm", "cdGIm", "cdWIm", "cdBIm", "cHudIm", "ceHIm", "cuHIm", "cdHIm", "cledqIm", "cquqd1Im", "cquqd8Im", "cquqd11Im", "cquqd81Im", "clequ1Im", "clequ3Im"]],
+      "operators_partial": [["cW", "cH", "cHbox", "cHDD", "cHG", "cHW", "cHB", "cHWB"],["cWtil", "cHGtil", "cHWtil", "cHBtil", "cHWBtil"]],     
+      "range": [[1,60],[1,25]],
+      "range_partial": [[2,9],[2,6]]   
     }
   }
   
