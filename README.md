@@ -14,7 +14,7 @@ After that, you will have MG5_aMC_v2_9_18 with all relevant models for EFT @dim6
     - Make sure to generate inside the model a restrict_card called ```restrict_base.dat``` with all WCs set to 0.
     - For each EFT block, define a list of operators with corresponding indices range inside the block.
     - You can also upload the tar.gz file in models/. 
-
+</details>
 EFT model (aqgc, SMEFTfr, SMEFTsim etc) should be uploaded in MG5_aMC_v2_9_23/models.
 For each model, copy an available restriction card and rename it as "restrict_base.dat", then put all WCs values to .000000e-00.
 
