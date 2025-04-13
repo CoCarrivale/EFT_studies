@@ -5,8 +5,11 @@
     "test": {
         "mg5_syntax": [["define p = g u u~ d d~ s s~ c c~ b b~ ## define j = p ## generate w+ w+ > w+ w+ NP=X"],["define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm vt ## define vl~ = ve~ vm~ vt~ ## generate z > l+ l- NP=X ## add process w+ > l+ vl NP=X ## add process w- > l- vl~ NP=X"]]
     },
-    "osww": {
-        "mg5_syntax": [["define j = g u c d s u~ c~ d~ s~ ## define p = g u c d s u~ c~ d~ s~ ## define ell+ = e+ mu+ ta+ ## define ell- = e- mu- ta- ## define V = w+ w- ## define vl = ve vm vt ## define vl~ = ve~ vm~ vt~ ## generate p p > ell+ vl w- $$ t t~ h QCD=1 SMHLOOP=0 NP=X"], ["define j = g u c d s u~ c~ d~ s~ ## define p = g u c d s u~ c~ d~ s~ ## define ell+ = e+ mu+ ta+ ## define ell- = e- mu- ta- ## define V = w+ w- ## define vl = ve vm vt ## define vl~ = ve~ vm~ vt~ ## generate p p > ell+ vl w- j $$ t t~ h QCD=1 SMHLOOP=0 NP=X", ["define j = g u c d s u~ c~ d~ s~ ## define p = g u c d s u~ c~ d~ s~ ## define ell+ = e+ mu+ ta+ ## define ell- = e- mu- ta- ## define V = w+ w- ## define vl = ve vm vt ## define vl~ = ve~ vm~ vt~ ## generate p p > ell- vl~ w+ $$ t t~ h QCD=1 SMHLOOP=0 NP=X"],["define j = g u c d s u~ c~ d~ s~ ## define p = g u c d s u~ c~ d~ s~ ## define ell+ = e+ mu+ ta+ ## define ell- = e- mu- ta- ## define V = w+ w- ## define vl = ve vm vt ## define vl~ = ve~ vm~ vt~ ## generate p p > ell- vl~ w+ j $$ t t~ h QCD=1 SMHLOOP=0 NP=X"]]]
+    "osww1": {
+        "mg5_syntax": [["define p = g u c d s b u~ c~ d~ s~ b~ ## define j = p ## define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm ## define vl~ = ve~ vm~ ## generate p p > e+ ve mu- vm~ j j SMHLOOP=0 QCD=0 NP=X"],["define p = g u c d s b u~ c~ d~ s~ b~ ## define j = p ## define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm ## define vl~ = ve~ vm~ ## p p > e- ve~ mu+ vm j j SMHLOOP=0 QCD=0 NP=X"]]
+    },
+    "osww2": {
+        "mg5_syntax": [["define p = g u c d s b u~ c~ d~ s~ b~ ## define j = p ## define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm ## define vl~ = ve~ vm~ ## generate p p > w+ w- j j SMHLOOP=0 QCD=0 NP=X"],["define p = g u c d s b u~ c~ d~ s~ b~ ## define j = p ## define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm ## define vl~ = ve~ vm~ ## w+ > l+ vl SMHLOOP=0 QCD=0 NP=X"],["define p = g u c d s b u~ c~ d~ s~ b~ ## define j = p ## define l+ = e+ mu+ ## define l- = e- mu- ## define vl = ve vm ## define vl~ = ve~ vm~ ## w- > l- vl~ SMHLOOP=0 QCD=0 NP=X"]]
     }
 }
 

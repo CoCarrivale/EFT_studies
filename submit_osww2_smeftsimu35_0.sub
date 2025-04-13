@@ -1,0 +1,10 @@
+executable              = /afs/cern.ch/user/c/ccarriva/dim6dim8/EFT_studies/run_madgraph_condor.sh
+arguments               = osww2 smeftsimu35 0
+output                  = /afs/cern.ch/user/c/ccarriva/dim6dim8/EFT_studies/logs/run_osww2_smeftsimu35_cuts.out 
+error                   = /afs/cern.ch/user/c/ccarriva/dim6dim8/EFT_studies/logs/run_osww2_smeftsimu35_cuts.err 
+log                     = /afs/cern.ch/user/c/ccarriva/dim6dim8/EFT_studies/logs/run_osww2_smeftsimu35.log 
++JobFlavour             = "nextweek" 
+periodic_remove         = JobStatus == 5  
+WhenToTransferOutput    = ON_EXIT_OR_EVICT 
+
+Queue 1

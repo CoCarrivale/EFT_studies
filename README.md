@@ -1,6 +1,6 @@
 # EFT_studies
 
-> Everything started when someone thought "why should I lose my mental health generating gridpacks with 100k operators, if only 10 of them affect my process?". That's why this code exists. Counting the diagrams introduced by different EFT operators and comparing them with SM ones, now you can derive a process-specific list of operators. Associated reweight_card and restrict_card are for free.
+> Counting the diagrams introduced by different EFT operators and comparing them with SM ones, now you can derive a process-specific list of operators. Associated reweight_card and restrict_card are for free.
 
 After cloning the repository, run the configuration file:
 

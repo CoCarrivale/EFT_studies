@@ -6,3 +6,5 @@ restrict_*
 py.py
 Output/
 logs/
+submit_*
+run_madgraph_condor.sh
