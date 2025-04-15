@@ -59,3 +59,5 @@ Outputs are stored in dedicated folders in Output/ and consist in following file
 
 Fix needed:
 - run automatically over all the blocks
+- add xsec computation
+- automatize filling of models.json for new models
