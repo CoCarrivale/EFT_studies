@@ -16,6 +16,8 @@ fi
 
 rm -rf $baseDir/MG5_aMC_v2_9_18/mg5_cmd.txt $baseDir/py.py $baseDir/MG5_debug $baseDir/Output/$proc/
 
+## Definition of input parameters (process, model, operators) ##
+
 file="$baseDir/processes.json"
 models_json="$baseDir/models.json"
 mkdir -p $baseDir/logs
@@ -30,7 +32,8 @@ mapfile -t operators < <(jq -r ".\"$model\".operators[$N][]" "$models_json")
 start=$(jq -r ".\"$model\".range[$N][0]" "$models_json")
 end=$(jq -r ".\"$model\".range[$N][1]" "$models_json")
 
-# Parse mg5_syntax (single or multiple)
+## Extraction of MadGraph syntax for your process ##
+
 mg5_entry=$(jq -c ".${proc}.mg5_syntax" "$file")
 declare -a mg5_syntax_list
 if [[ "$mg5_entry" =~ ^\[ ]]; then
@@ -39,11 +42,16 @@ else
   mg5_syntax_list=("$mg5_entry")
 fi
 
+## Counting of diagrams ##
+## Note: Code runs over all sub-processes (here called "groups") defined in process.json ##
+
 declare -a sm_diagrams_per_group
 declare -A operator_diagrams_per_group
 
 for ((g=0; g<${#mg5_syntax_list[@]}; g++)); do
   group="${mg5_syntax_list[$g]}"
+  
+  ## Running for SM ##
 
   echo "Counting SM diagrams for group $g"
   cmd_file="$baseDir/MG5_aMC_v2_9_18/mg5_cmd.txt"
@@ -54,14 +62,21 @@ for ((g=0; g<${#mg5_syntax_list[@]}; g++)); do
     [[ -n "$trimmed" ]] && echo "$trimmed" >> "$cmd_file"
   done
   echo "quit" >> "$cmd_file"
+  
+  ## Number of diagrams is extracted by MadGraph log ##
 
   sm_log="$baseDir/Output/$proc/mg5_${proc}_g${g}_SM.log"
   python3 $baseDir/MG5_aMC_v2_9_18/bin/mg5_aMC $cmd_file > "$sm_log"
   diagrams=$(grep -m1 "^Total: .* diagrams" "$sm_log" | sed -n 's/.*with \([0-9]\+\) diagrams/\1/p')
   sm_diagrams_per_group+=($diagrams)
+  
+  ## Running for EFT contributions ##
 
   for op in "${operators[@]}"; do
+
+    ## Modification of restrict_base.dat to select the specific EFT contribution ##
     sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $op\>/\\1  1.00000e+00 # $op/" "$restrict_card"
+    
     echo "import model $ufo-base" > "$cmd_file"
     IFS='##' read -ra np_parts <<< "${group//X/1}"
     for part in "${np_parts[@]}"; do
@@ -74,20 +89,26 @@ for ((g=0; g<${#mg5_syntax_list[@]}; g++)); do
     python3 $baseDir/MG5_aMC_v2_9_18/bin/mg5_aMC $cmd_file > "$log_file"
     n_diags=$(grep -m1 "^Total: .* diagrams" "$log_file" | sed -n 's/.*with \([0-9]\+\) diagrams/\1/p')
     operator_diagrams_per_group[$op]+="$n_diags "
-
+    
+    ## Modification of restrict_base.dat to restore initial values (EFT=0) before next iteration ##   
     sed -i -E "s/^([[:space:]]*[0-9]+)[[:space:]]+[-+0-9.eE]+[[:space:]]+# $op\>/\\1  .000000e+00 # $op/" "$restrict_card"
+  
   done
   rm "$cmd_file"
 done
 
-# Write diagram summary
+## Write diagram summary ##
+
 out_diagrams="$LOCAL_PATH/Output/$proc/diagrams.txt"
 echo "SM: ${sm_diagrams_per_group[*]}" > "$out_diagrams"
 for op in "${operators[@]}"; do
   echo "$op: ${operator_diagrams_per_group[$op]}" >> "$out_diagrams"
 done
 
-# Filter significant operators
+## Filter significant operators ##
+## Note: This step is performed comparing the number of diagrams of some EFT contribution wrt SM ones ##
+## If N(EFT_i) = N(SM) the operator doesn't affect the process ##
+
 declare -a DIFF_OPS
 for op in "${operators[@]}"; do
   op_diags=( ${operator_diagrams_per_group[$op]} )
@@ -103,6 +124,8 @@ echo "Significant operators: ${DIFF_OPS[*]}"
 ######################
 ######################
 
+## Build REWEIGHT CARD for relevant operators ##
+
 echo "   "
 echo "STARTING"
 
@@ -115,15 +138,6 @@ echo "change helicity False" > "$rwgt_card"
 echo "change rwgt_dir rwgt" >> "$rwgt_card"
 echo "" >> "$rwgt_card"
 
-#OPERATORS=($(jq -r --arg model "$model" '.[$model].operators[]' "$models_json"))
-#START_INDEX=$(jq -r --arg model "$model" '.[$model].range[0]' "$models_json")
-
-#declare -A OP_INDEX
-#for i in "${!OPERATORS[@]}"; do
-#    idx=$((START_INDEX + i))
-#    OP_INDEX["${OPERATORS[$i]}"]=$idx
-#done
-
 OPERATORS=($(jq -r --arg model "$model" --argjson n "$N" '.[$model].operators[$n][]' "$models_json"))
 START_INDEX=$(jq -r --arg model "$model" --argjson n "$N" '.[$model].range[$n][0]' "$models_json")
 
@@ -133,13 +147,12 @@ for i in "${!OPERATORS[@]}"; do
     OP_INDEX["${OPERATORS[$i]}"]=$idx
 done
 
-write_operator_block() {
-    local name=$1
-    local value=$2
-    local -A values=([${OP_INDEX[$name]}]=$value)
-
-    echo "   set $block ${OP_INDEX[$name]} $value" >> "$rwgt_card"
-}
+#write_operator_block() {
+#    local name=$1
+#    local value=$2
+#    local -A values=([${OP_INDEX[$name]}]=$value)
+#    echo "   set $block ${OP_INDEX[$name]} $value" >> "$rwgt_card"
+#}
 
 write_full_block() {
     local -n input_vals=$1 
@@ -158,7 +171,8 @@ write_full_block sm_vals
 
 counter=2
 
-# Reweighting weights for single operators
+## Reweighting weights for single operators ##
+
 for op in "${DIFF_OPS[@]}"; do
     clean_op=$(echo "$op" | tr -d '[:space:]')
 
@@ -174,7 +188,8 @@ for op in "${DIFF_OPS[@]}"; do
     done
 done
 
-# Reweighting weights for 2 operators
+## Reweighting weights for 2 operators ##
+
 for ((i = 0; i < ${#DIFF_OPS[@]}; i++)); do
     for ((j = i + 1; j < ${#DIFF_OPS[@]}; j++)); do
         op1=$(echo "${DIFF_OPS[$i]}" | tr -d '[:space:]')
@@ -193,7 +208,8 @@ for ((i = 0; i < ${#DIFF_OPS[@]}; i++)); do
     done
 done
 
-# Cleaning reweight card
+## Cleaning reweight card ##
+## Note: non-relevant operators are now removed ##
 
 num_blocks=$(grep -c "^#" "$rwgt_card")
 
@@ -221,10 +237,9 @@ done < "$rwgt_card"
 
 mv "$tmpfile" "$rwgt_card"
 
-
 echo "Reweight card ready!"
 
-# Restriction card
+## Build RESTRICTION CARD for relevant operators ##
 
 restrict_target="$LOCAL_PATH/Output/${proc}/restrict_${proc}.dat"
 cp "$restrict_card" "$restrict_target"
@@ -255,8 +270,11 @@ while IFS= read -r line; do
     fi
 done < "$restrict_target"
 
-
 mv "$tmpfile" "$restrict_target"
+
+echo "Restrict card ready!"
+
+## Organizing outputs in output folder ##
 
 rm py.py
 
